@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
+using Sample.Route.SwaggerHelper;
 
 namespace Sample.Route
 {
@@ -13,10 +14,14 @@ namespace Sample.Route
         {
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sample.Route", Version = "v1" });
-            });
+
+            services.AddApiVersioning(config =>
+                {
+                    config.DefaultApiVersion = new ApiVersion(2, 0);
+                    config.AssumeDefaultVersionWhenUnspecified = true;
+                    config.ReportApiVersions = true;
+                })
+                .AddSwaggerConfiguration();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -25,8 +30,13 @@ namespace Sample.Route
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sample.Route v1"));
+                app.UseSwagger(options => options.RouteTemplate = "swagger/{documentName}/swagger.json");
+                app.UseSwaggerUI(options =>
+                {
+                    options.DocumentTitle = "Sample api with Route";
+                    options.SwaggerEndpoint("/swagger/v1.0/swagger.json", "[DEPRECATED] Sample Route Versioning - v1.0");
+                    options.SwaggerEndpoint("/swagger/v2.0/swagger.json", "Sample Route Versioning - v2.0");
+                });
             }
 
             app.UseHttpsRedirection();
