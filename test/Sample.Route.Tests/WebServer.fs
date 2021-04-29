@@ -10,7 +10,7 @@ module WebServer =
     let servicesConfiguration (_: IServiceCollection) = ()
         
     let hostBuilder (builder: IWebHostBuilder) = 
-        builder.ConfigureServices(Action<IServiceCollection> servicesConfiguration)
+        builder.ConfigureServices(Action<IServiceCollection> servicesConfiguration).UseEnvironment("Test")
         |> ignore
 
     let webAppFactory () = 
