@@ -7,7 +7,9 @@ using System.Linq;
 namespace Sample.Route.Controllers
 {
     [ApiController]
-    [Route("api/v1.0/[controller]")]
+    [ApiVersion("1.0", Deprecated = true)]
+    [ApiVersion("2.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -23,7 +25,8 @@ namespace Sample.Route.Controllers
         }
 
         [HttpGet]
-        [HttpGet("/api/v2.0/[controller]")]
+        [MapToApiVersion("1.0")]
+        [MapToApiVersion("2.0")]
         public IEnumerable<WeatherForecast> Get()
         {
             var rng = new Random();
@@ -36,7 +39,8 @@ namespace Sample.Route.Controllers
                 .ToArray();
         }
 
-        [HttpGet("/api/v2.0/[controller]/{count}")]
+        [HttpGet("{count:int}")]
+        [MapToApiVersion("2.0")]
         public IEnumerable<WeatherForecast> Get(int count)
         {
             var rng = new Random();

@@ -8,8 +8,6 @@ open Sample.Route
 open System.Collections.Generic
 open HttpFunctions
 open WebServer
-open FsCheck.Xunit
-open FsCheck
 
 module WeatherForecastControllerTests =
     [<Literal>]
@@ -28,7 +26,6 @@ module WeatherForecastControllerTests =
         |> readText
         |> Serialization.Deserialize<'T>
  
-
     [<Fact>]
     let ``The api version 1 call should return 5 elements filled with valid date`` () =
         let result =
