@@ -39,7 +39,10 @@ namespace Sample.Route
                 });
             }
 
-            app.UseHttpsRedirection();
+            if (!env.IsEnvironment("Testing"))
+            {
+                app.UseHttpsRedirection();
+            }
 
             app.UseRouting();
 
